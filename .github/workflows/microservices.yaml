@@ -21,5 +21,9 @@ jobs:
       
       - name: Build
         run: ./gradlew build
-  
-    
+      
+      - name: Upload JAR
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: microservice-jdk21-cicd
+          path: build/libs/*.jar
