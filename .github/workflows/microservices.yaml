@@ -1,3 +1,4 @@
+name: Microservices CI/CD JDK 21
 on:
   push
 
@@ -18,10 +19,7 @@ jobs:
       - name: Grant execute permission
         run: chmod +x gradlew
       
-      - name: Build and Run
-        run: ./gradlew bootRun
-        
-
-      
-
+      - name: Build
+        run: ./gradlew build
+  
     
