@@ -1,5 +1,13 @@
-FROM amazoncorretto:21-alpine3.20-jdk
+# Stage 1: Build
+FROM amazoncorretto:21-alpine3.20-jdk AS builder
+WORKDIR /app
 COPY . .
 RUN chmod +x gradlew && ./gradlew bootJar
-CMD  ["java", "-jar", "build/libs/demo-cicd-0.0.1-SNAPSHOT.jar"]
+
+# Stage 2: Runtime
+FROM amazoncorretto:21-alpine3.20-jre
+WORKDIR /app
+COPY --from=builder /app/build/libs/demo-cicd-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+CMD ["java", "-jar", "app.jar"]
 
