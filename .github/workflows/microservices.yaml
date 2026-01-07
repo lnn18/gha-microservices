@@ -1,5 +1,10 @@
 on: 
-  push
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 permissions:
   packages: write
@@ -24,6 +29,7 @@ jobs:
           ./gradlew test
       
       - name: Login to GitHub Container Registry
+        if: ${{ github.event_name == 'push' }}
         # login-action @v3.6.0
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef
         with:
@@ -39,5 +45,5 @@ jobs:
         # build and push @v6.18.0
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
         with:
-          push: true
+          push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/${{ github.repository }}:latest
