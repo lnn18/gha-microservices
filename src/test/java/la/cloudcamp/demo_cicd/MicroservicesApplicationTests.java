@@ -2,14 +2,27 @@ package la.cloudcamp.demo_cicd;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.junit.jupiter.api.BeforeEach;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest
 class MicroservicesApplicationTests {
 
 	@Autowired
-	private WebTestClient webTestClient;
+	private WebApplicationContext webApplicationContext;
+
+	private MockMvc mockMvc;
+
+	@BeforeEach
+	void setUp() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	}
 
 	@Test
 	void contextLoads() {
@@ -17,36 +30,29 @@ class MicroservicesApplicationTests {
 	}
 
 	@Test
-	void helloEndpointReturnsDefaultMessage() {
-		webTestClient.get().uri("/hello")
-			.exchange()
-			.expectStatus().isOk()
-			.expectBody(String.class)
-			.isEqualTo("Hello World!");
+	void helloEndpointReturnsDefaultMessage() throws Exception {
+		mockMvc.perform(get("/hello"))
+			.andExpect(status().isOk())
+			.andExpect(content().string("Hello World!"));
 	}
 
 	@Test
-	void helloEndpointHttpStatusOk() {
-		webTestClient.get().uri("/hello")
-			.exchange()
-			.expectStatus().isOk();
+	void helloEndpointHttpStatusOk() throws Exception {
+		mockMvc.perform(get("/hello"))
+			.andExpect(status().isOk());
 	}
 
 	@Test
-	void helloEndpointWithCustomName() {
-		webTestClient.get().uri("/hello?name=GitHub")
-			.exchange()
-			.expectStatus().isOk()
-			.expectBody(String.class)
-			.isEqualTo("Hello GitHub!");
+	void helloEndpointWithCustomName() throws Exception {
+		mockMvc.perform(get("/hello?name=GitHub"))
+			.andExpect(status().isOk())
+			.andExpect(content().string("Hello GitHub!"));
 	}
 
 	@Test
-	void helloEndpointWithEmptyName() {
-		webTestClient.get().uri("/hello?name=")
-			.exchange()
-			.expectStatus().isOk()
-			.expectBody(String.class)
-			.isEqualTo("Hello !");
+	void helloEndpointWithEmptyName() throws Exception {
+		mockMvc.perform(get("/hello?name="))
+			.andExpect(status().isOk())
+			.andExpect(content().string("Hello !"));
 	}
 }
