@@ -48,6 +48,8 @@ jobs:
         run: |
           repo_name=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           echo "REPO_NAME=${repo_name}" >> $GITHUB_OUTPUT
+          echo "$GITHUB_REPOSITORY" #runner context
+          echo "${{ github.repository }}" #github context
       
       - name: Build and push
         # build and push @v6.18.0
@@ -55,5 +57,5 @@ jobs:
         with:
           push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/${{ steps.tag.outputs.REPO_NAME }}:latest
-          # cache-to: type=gha, mode=max
-          # cache-from: type=gha
+          cache-to: type=gha, mode=max
+          cache-from: type=gha
