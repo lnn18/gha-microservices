@@ -53,6 +53,6 @@ class MicroservicesApplicationTests {
 	void helloEndpointWithEmptyName() throws Exception {
 		mockMvc.perform(get("/hello?name="))
 			.andExpect(status().isOk())
-			.andExpect(content().string("Hello !"));
+			.andExpect(content().string("Hello World!"));
 	}
 }
